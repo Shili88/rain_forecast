@@ -2,6 +2,8 @@ import requests
 from datetime import datetime, timedelta
 import os 
 import json
+from classes import weather_forecast
+cache = weather_forecast
 
 # Load cache 
 def load_cache():
