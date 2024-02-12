@@ -63,3 +63,4 @@ if __name__ == "__main__":
         print("No rain today")
     else:
         print("Don't know...")
+    save_cache(cache)
