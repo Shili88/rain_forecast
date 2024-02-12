@@ -3,24 +3,29 @@ from datetime import datetime, timedelta
 import os 
 import json
 
+from classes import WeatherForecast
+cache = WeatherForecast()
+
 # Load cache 
 def load_cache():
     cache_file_path = os.path.join("data", "cache.json")
     if not os.path.exists(cache_file_path):
         print("Cache not existing.....")
-        return {}
+        cache = WeatherForecast()
+        return cache
     with open (cache_file_path)as f:
         print("Loading cache.....")
-        return json.load(f)
+        cache = WeatherForecast(cache = json.load(f))
+        return cache
 #save cache
 def save_cache(cache):
     cache_file_path = os.path.join("data", "cache.json")
     with open(cache_file_path, "w")as f:
-        json.dump(cache, f)
-
+        json.dump(cache.storage, f)
 
 def get_weather_info (searched_date: str, latitude: str, longitude: str, cache):
-    if searched_date in cache:
+    if cache[searched_date]:
+        print ("Date in the cache.")
         return cache[searched_date]
     url = "https://api.open-meteo.com/v1/forecast"
     # set params
@@ -58,9 +63,9 @@ if __name__ == "__main__":
     resp = get_weather_info(searched_date=date, latitude=lat, longitude=long, cache=cache)
 
     if resp > 0:
-        print("It is raining day")
+        print("It is raining day, prepare the umbrella...")
     elif resp == 0:
-        print("No rain today")
+        print("No rain today. It's sunny day!!!")
     else:
-        print("Don't know...")
+        print("No data, do not know the forecast.")
     save_cache(cache)
